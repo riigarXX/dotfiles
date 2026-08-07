@@ -171,3 +171,6 @@ myip() {
   echo "IP Local: $(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || hostname -I | awk '{print $1}')"
   echo "IP Pública: $(curl -s ifconfig.me)"
 }
+
+# TEMA ACTIVO (generado por theme.sh)
+[ -f "$HOME/.config/zsh-colors.sh" ] && source "$HOME/.config/zsh-colors.sh"

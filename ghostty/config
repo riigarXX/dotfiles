@@ -18,7 +18,18 @@ palette = 5=#AB9DF2
 palette = 6=#78DCE8
 palette = 7=#FCFCFA
 
-palette = 8=#727072 palette = 9=#FF6188 palette = 10=#A9DC76 palette = 11=#FFD866 palette = 12=#FC9867 palette = 13=#AB9DF2 palette = 14=#78DCE8 palette = 15=#FFFFFF # ┌──────────────────────────────────────────────────────────────────────────────┐ │                            INPUT / KEYBINDINGS                               │ └──────────────────────────────────────────────────────────────────────────────┘ # macOS Alt key fix macos-option-as-alt = left keybind = alt+left=unbind keybind = alt+right=unbind
+palette = 8=#727072 
+palette = 9=#FF6188 
+palette = 10=#A9DC76 
+palette = 11=#FFD866 
+palette = 12=#FC9867 
+palette = 13=#AB9DF2 
+palette = 14=#78DCE8 
+palette = 15=#FFFFFF 
+# ┌──────────────────────────────────────────────────────────────────────────────┐ 
+# │                            INPUT / KEYBINDINGS                               │ 
+# └──────────────────────────────────────────────────────────────────────────────┘ 
+## macOS Alt key fix macos-option-as-alt = left keybind = alt+left=unbind keybind = alt+right=unbind
 # Split Management
 keybind = alt+v=new_split:right
 keybind = alt+d=new_split:down
@@ -36,3 +47,7 @@ keybind = ctrl+shift+h=resize_split:left,10
 keybind = ctrl+shift+l=resize_split:right,10
 
 keybind = cmd+k=clear_screen
+
+# Tema activo (lo escribe theme.sh). Va al final para que sus colores
+# ganen sobre los inline de arriba.
+config-file = theme.conf

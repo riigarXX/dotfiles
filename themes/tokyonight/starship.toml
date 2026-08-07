@@ -29,19 +29,19 @@ $time\
 [ ](fg:color_bg1)\
 $line_break$character"""
 
-palette = 'onedark'
+palette = 'tokyonight'
 
-[palettes.onedark]
-color_fg0 = '#ABB2BF'
-color_bg1 = '#282C34'
-color_bg3 = '#3E4451'
-color_blue = '#61AFEF'
-color_aqua = '#56B6C2'
-color_green = '#98C379'
-color_orange = '#D19A66'
-color_purple = '#C678DD'
-color_red = '#E06C75'
-color_yellow = '#E5C07B'
+[palettes.tokyonight]
+color_fg0 = '#c0caf5'
+color_bg1 = '#1a1b26'
+color_bg3 = '#24283b'
+color_blue = '#7aa2f7'
+color_aqua = '#7dcfff'
+color_green = '#9ece6a'
+color_orange = '#ff9e64'
+color_purple = '#bb9af7'
+color_red = '#f7768e'
+color_yellow = '#e0af68'
 
 [os]
 disabled = false

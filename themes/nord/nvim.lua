@@ -1,21 +1,22 @@
 return {
   {
-    "navarasu/onedark.nvim",
+    "shaunsingh/nord.nvim",
     lazy = false,
     priority = 1000,
-    opts = {
-      transparent = true,
-    },
+    config = function()
+      vim.g.nord_disable_background = true
+      vim.cmd.colorscheme("nord")
+    end,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "nord",
     },
     init = function()
       local function apply()
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#61AFEF" })
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#61AFEF" })
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#81A1C1" })
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#81A1C1" })
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
         vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
       end

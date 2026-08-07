@@ -1,21 +1,21 @@
 return {
   {
-    "navarasu/onedark.nvim",
+    "Mofiqul/dracula.nvim",
     lazy = false,
     priority = 1000,
     opts = {
-      transparent = true,
+      transparent_bg = true,
     },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "dracula",
     },
     init = function()
       local function apply()
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#61AFEF" })
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#61AFEF" })
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#BD93F9" })
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#BD93F9" })
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
         vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
       end

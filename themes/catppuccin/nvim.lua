@@ -1,21 +1,27 @@
 return {
   {
-    "navarasu/onedark.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
     lazy = false,
     priority = 1000,
     opts = {
-      transparent = true,
+      flavour = "mocha",
+      transparent_background = true,
     },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
+    end,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "catppuccin",
     },
     init = function()
       local function apply()
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#61AFEF" })
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#61AFEF" })
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#89B4FA" })
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#89B4FA" })
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
         vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
       end
