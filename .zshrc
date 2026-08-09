@@ -65,6 +65,7 @@ alias gstp='git stash push'
 alias gstp='git stash pop'
 alias gstl='git stash list'
 alias gstd='git stash drop'
+alias theme='~/dotfiles/theme.sh'
 
 # NVM (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
@@ -95,6 +96,9 @@ alias drmi='docker rmi'
 alias dex='docker exec -it'
 alias dlogs='docker logs'
 alias dlogsf='docker logs -f'
+
+# Mi fork de opencode (panel de background agents + alertas)
+alias opencode="$HOME/bin/opencode"
 
 # PATHS ADICIONALES PARA HERRAMIENTAS
 export PATH="$HOME/.local/bin:$PATH"
@@ -174,3 +178,8 @@ myip() {
 
 # TEMA ACTIVO (generado por theme.sh)
 [ -f "$HOME/.config/zsh-colors.sh" ] && source "$HOME/.config/zsh-colors.sh"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/rigarxx/.lmstudio/bin"
+# End of LM Studio CLI section
+
