@@ -1,27 +1,24 @@
 return {
   {
-    "navarasu/onedark.nvim",
-    lazy = false,
-    priority = 1000,
+    "ellisonleao/gruvbox.nvim",
     opts = {
-      transparent = true,
+      transparent_mode = true,
+      overrides = {
+        SignColumn = { bg = "none" },
+        GruvboxGreenSign = { bg = "none" },
+        GruvboxOrangeSign = { bg = "none" },
+        GruvboxPurpleSign = { bg = "none" },
+        GruvboxYellowSign = { bg = "none" },
+        GruvboxRedSign = { bg = "none" },
+        GruvboxBlueSign = { bg = "none" },
+        GruvboxAquaSign = { bg = "none" },
+      },
     },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "gruvbox",
     },
-    init = function()
-      local function apply()
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#61AFEF" })
-        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#61AFEF" })
-        vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
-        vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
-      end
-      local group = vim.api.nvim_create_augroup("LazyThemeOverrides", { clear = true })
-      vim.api.nvim_create_autocmd("ColorScheme", { callback = apply, group = group })
-      apply()
-    end,
   },
 }
