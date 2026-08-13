@@ -1,0 +1,17 @@
+# ------------------------------------------------------------------ macOS ----
+.DS_Store
+
+# ------------------------------------------------- tema activo (derivados) --
+# Copias que genera ./theme.sh apply <tema> desde themes/<tema>/.
+# La fuente de verdad son los archivos dentro de themes/<tema>/; los derivados
+# no se versionan para que el repo no cambie al cambiar de tema o de máquina.
+ghostty/theme.conf
+starship.toml
+nvim/lua/plugins/colorscheme.lua
+opencode/tui.json
+opencode/themes/
+claude/settings.json
+claude/themes/
+
+# nvim/lazy-lock.json se reescribe en cada apply (nvim sync): no versionar.
+nvim/lazy-lock.json

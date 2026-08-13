@@ -137,4 +137,15 @@ fi
 log "Instalando plugins de Neovim (primera ejecución)..."
 nvim --headless "+Lazy! sync" +qa 2>/dev/null || warn "Ejecuta 'nvim' manualmente para terminar de instalar los plugins"
 
+# ------------------------------------------------------ Tema por defecto ----
+# Los archivos del tema activo no se versionan (ver .gitignore); en un clon
+# limpio no existen hasta correr `theme.sh apply`. Si falta el tema aplicado,
+# se aplica catppuccin por defecto para dejar el setup listo.
+if [ ! -f "$DOTFILES_DIR/ghostty/theme.conf" ]; then
+  log "Sin tema aplicado; aplicando catppuccin por defecto..."
+  "$DOTFILES_DIR/theme.sh" apply catppuccin || warn "Fallo al aplicar el tema; ejecuta: ./theme.sh apply <tema>"
+else
+  log "Tema ya aplicado"
+fi
+
 log "¡Listo! Recarga tu shell con: source ~/.zshrc"

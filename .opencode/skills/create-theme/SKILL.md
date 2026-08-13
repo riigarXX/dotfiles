@@ -221,6 +221,9 @@ sync. Then tell the user:
   `nvim/lua/plugins/colorscheme.lua`, `opencode/tui.json`,
   `opencode/themes/*.json`, `claude/settings.json`, or
   `claude/themes/*.json` directly — always go through `./theme.sh apply`.
+- Those applied/generated files are gitignored (see repo `.gitignore`); only
+  `themes/<name>/` is versioned. `install.sh` applies `catppuccin` by default
+  on a fresh clone when no theme is applied.
 - Keep the new theme's starship.toml structure byte-identical to the others
   except palette name + values.
 - Do not add wallpapers or touch `ghostty/config` (transparency/opacity is
