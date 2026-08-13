@@ -9,6 +9,8 @@ NVIM_ACTIVE="$DOTFILES_DIR/nvim/lua/plugins/colorscheme.lua"
 ZSH_ACTIVE="$HOME/.config/zsh-colors.sh"
 OPENCODE_THEMES="$DOTFILES_DIR/opencode/themes"
 OPENCODE_TUI="$DOTFILES_DIR/opencode/tui.json"
+CLAUDE_THEMES="$DOTFILES_DIR/claude/themes"
+CLAUDE_SETTINGS="$DOTFILES_DIR/claude/settings.json"
 
 RST=$'\033[0m'
 DIM=$'\033[2m'
@@ -118,9 +120,10 @@ load_theme() {
   # parseo 100% bash: sin subprocesos por clave (una lectura del archivo)
   while IFS= read -r line; do
     case $line in
-      'background = '*)   T_BG=${line#*= } ;;
-      'foreground = '*)   T_FG=${line#*= } ;;
-      'cursor-color = '*) T_CUR=${line#*= } ;;
+      'background = '*)            T_BG=${line#*= } ;;
+      'foreground = '*)            T_FG=${line#*= } ;;
+      'cursor-color = '*)          T_CUR=${line#*= } ;;
+      'selection-background = '*)  T_SEL=${line#*= } ;;
       'palette = '*=*) k=${line#palette = }; k=${k%%=*}; v=${line#* = }; v=${v#*=}; T_P[$k]=$v ;;
     esac
   done < "$conf"
@@ -361,6 +364,113 @@ opencode_apply() {
   fi
 }
 
+# ------------------------------------------------------------ claude (tema) --
+# Genera claude/themes/<tema>.json (formato de temas de Claude Code: base
+# "dark" + overrides de la paleta) y fija "theme": "custom:<tema>" en
+# claude/settings.json (enlazado a ~/.claude/settings.json por install.sh).
+# Claude Code recarga claude/themes al vuelo; solo hay que reiniciar si el
+# directorio no existía cuando arrancó la sesión.
+claude_apply() {
+  local t="$1"
+  local out="$CLAUDE_THEMES/$t.json"
+  local body="" nl=""
+  local bg="${T_P[8]:-$T_FG}"      # muted / inactive
+  local red="${T_P[1]:-$T_FG}"
+  local green="${T_P[2]:-$T_FG}"
+  local yellow="${T_P[3]:-$T_FG}"
+  local blue="${T_P[4]:-$T_FG}"
+  local purple="${T_P[5]:-$T_FG}"
+  local cyan="${T_P[6]:-$T_FG}"
+  local orange="${T_S_ORANGE:-$yellow}"
+  local bd="${T_S_BG3:-$bg}"       # borde sutil
+  local dgreen dred
+  dgreen=$(hsl_darken "$green")    # fondo de líneas añadidas
+  dred=$(hsl_darken "$red")        # fondo de líneas eliminadas
+
+  add() { body+="${nl}    \"$1\": $2"; nl=$',\n'; }
+  q()   { printf '"%s"' "$1"; }
+
+  # acento de marca y texto
+  add claude "$(q "$blue")"
+  add claudeShimmer "$(q "$cyan")"
+  add text "$(q "$T_FG")"
+  add inverseText "$(q "$T_BG")"
+  add inactive "$(q "$bg")"
+  add inactiveShimmer "$(q "$bd")"
+  add subtle "$(q "$bd")"
+  add suggestion "$(q "$cyan")"
+  add permission "$(q "$blue")"
+  add remember "$(q "$orange")"
+  # estados
+  add success "$(q "$green")"
+  add error "$(q "$red")"
+  add warning "$(q "$yellow")"
+  add warningShimmer "$(q "$orange")"
+  add merged "$(q "$purple")"
+  # borde del input y modos
+  add promptBorder "$(q "$blue")"
+  add promptBorderShimmer "$(q "$cyan")"
+  add planMode "$(q "$purple")"
+  add autoAccept "$(q "$green")"
+  add bashBorder "$(q "$cyan")"
+  add ide "$(q "$orange")"
+  add fastMode "$(q "$yellow")"
+  add fastModeShimmer "$(q "$orange")"
+  # diffs: fondo oscurecido, palabra en color vivo
+  add diffAdded "$(q "$dgreen")"
+  add diffRemoved "$(q "$dred")"
+  add diffAddedDimmed "$(q "$bg")"
+  add diffRemovedDimmed "$(q "$bg")"
+  add diffAddedWord "$(q "$green")"
+  add diffRemovedWord "$(q "$red")"
+  # modo fullscreen (fondos de mensajes)
+  add userMessageBackground "$(q "$T_BG")"
+  add userMessageBackgroundHover "$(q "$bd")"
+  add bashMessageBackgroundColor "$(q "$bd")"
+  add memoryBackgroundColor "$(q "$bd")"
+  add selectionBg "$(q "${T_SEL:-$bd}")"
+  # medidor de uso y etiquetas de rol
+  add rate_limit_fill "$(q "$blue")"
+  add rate_limit_empty "$(q "$bd")"
+  add briefLabelYou "$(q "$cyan")"
+  add briefLabelClaude "$(q "$blue")"
+  # colores de subagentes
+  add red_FOR_SUBAGENTS_ONLY "$(q "$red")"
+  add blue_FOR_SUBAGENTS_ONLY "$(q "$blue")"
+  add green_FOR_SUBAGENTS_ONLY "$(q "$green")"
+  add yellow_FOR_SUBAGENTS_ONLY "$(q "$yellow")"
+  add purple_FOR_SUBAGENTS_ONLY "$(q "$purple")"
+  add orange_FOR_SUBAGENTS_ONLY "$(q "$orange")"
+  add pink_FOR_SUBAGENTS_ONLY "$(q "${T_P[13]:-$purple}")"
+  add cyan_FOR_SUBAGENTS_ONLY "$(q "$cyan")"
+  # rainbow del prompt (ultrathink)
+  add rainbow_red "$(q "$red")"
+  add rainbow_orange "$(q "$orange")"
+  add rainbow_yellow "$(q "$yellow")"
+  add rainbow_green "$(q "$green")"
+  add rainbow_blue "$(q "$blue")"
+  add rainbow_indigo "$(q "$blue")"
+  add rainbow_violet "$(q "$purple")"
+
+  {
+    printf '%s\n' '{'
+    printf '%s\n' '  "name": "'"$t"'",'
+    printf '%s\n' '  "base": "dark",'
+    printf '%s\n' '  "overrides": {'
+    printf '%b\n' "$body"
+    printf '%s\n' '  }'
+    printf '%s\n' '}'
+  } > "$out"
+
+  if [ -f "$CLAUDE_SETTINGS" ]; then
+    local tmp
+    tmp=$(mktemp)
+    jq --arg t "custom:$t" '.theme = $t' "$CLAUDE_SETTINGS" > "$tmp" && mv "$tmp" "$CLAUDE_SETTINGS"
+  else
+    printf '{\n  "$schema": "https://json.schemastore.org/claude-code-settings.json",\n  "theme": "custom:%s"\n}\n' "$t" > "$CLAUDE_SETTINGS"
+  fi
+}
+
 # ------------------------------------------------------------ aplicar --------
 apply() {
   local t="$1"
@@ -371,6 +481,7 @@ apply() {
     "starship → starship.toml"
     "zsh → ~/.config/zsh-colors.sh"
     "opencode → themes/$t.json"
+    "claude → themes/$t.json"
     "nvim → colorscheme.lua"
   )
   local n=${#steps[@]} i j label fill b
@@ -402,6 +513,11 @@ apply() {
         opencode_apply "$t"
         ;;
       4)
+        load_theme "$t"
+        mkdir -p "$CLAUDE_THEMES"
+        claude_apply "$t"
+        ;;
+      5)
         if ! cmp -s "$THEMES_DIR/$t/nvim.lua" "$NVIM_ACTIVE"; then
           cp "$THEMES_DIR/$t/nvim.lua" "$NVIM_ACTIVE"
           nvim --headless "+Lazy! sync" +qa >/dev/null 2>&1 || warn "Ejecuta 'nvim' manualmente para terminar de instalar"
@@ -415,7 +531,8 @@ apply() {
   printf "  • starship/zsh: recarga con:  source ~/.zshrc\n"
   printf "  • ghostty:       reinicia la app (Cmd+Q) — el recargado no aplica la paleta al 100%%\n"
   printf "  • nvim:          ya está listo\n"
-  printf "  • opencode:      reinicia la app para ver el tema nuevo\n\n"
+  printf "  • opencode:      reinicia la app para ver el tema nuevo\n"
+  printf "  • claude:        se recarga solo (vigila ~/.claude/themes)\n\n"
 }
 
 # ------------------------------------------------------------ menú interactivo
@@ -519,6 +636,12 @@ interactive() {
 }
 
 # ------------------------------------------------------------------ main -----
+# Solo corre cuando se ejecuta como script; si se hace source (para generar
+# temas en bucles) la entrada queda disponible sin disparar el menú.
+if [ "${BASH_SOURCE[0]}" != "$0" ]; then
+  return
+fi
+
 case "${1:-}" in
   "" ) interactive ;;
   list | ls )

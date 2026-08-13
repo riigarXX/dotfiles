@@ -36,6 +36,16 @@ link "$DOTFILES_DIR/opencode/opencode.jsonc" "$HOME/.config/opencode/opencode.js
 link "$DOTFILES_DIR/opencode/tui.json"       "$HOME/.config/opencode/tui.json"
 link "$DOTFILES_DIR/opencode/themes"         "$HOME/.config/opencode/themes"
 
+# ------------------------------------------------------------------ Claude --
+mkdir -p "$HOME/.claude" "$HOME/.claude/plugins"
+link "$DOTFILES_DIR/claude/settings.json"        "$HOME/.claude/settings.json"
+link "$DOTFILES_DIR/claude/settings.local.json"  "$HOME/.claude/settings.local.json"
+link "$DOTFILES_DIR/claude/CLAUDE.md"            "$HOME/.claude/CLAUDE.md"
+link "$DOTFILES_DIR/claude/agents"               "$HOME/.claude/agents"
+link "$DOTFILES_DIR/claude/skills"               "$HOME/.claude/skills"
+link "$DOTFILES_DIR/claude/plugins/known_marketplaces.json" "$HOME/.claude/plugins/known_marketplaces.json"
+link "$DOTFILES_DIR/claude/themes"               "$HOME/.claude/themes"
+
 # ---------------------------------------------------------------- Homebrew --
 if ! command -v brew >/dev/null 2>&1; then
   log "Instalando Homebrew..."

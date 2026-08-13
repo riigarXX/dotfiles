@@ -1,24 +1,33 @@
 return {
   {
-    "ellisonleao/gruvbox.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
+    lazy = false,
+    priority = 1000,
     opts = {
-      transparent_mode = true,
-      overrides = {
-        SignColumn = { bg = "none" },
-        GruvboxGreenSign = { bg = "none" },
-        GruvboxOrangeSign = { bg = "none" },
-        GruvboxPurpleSign = { bg = "none" },
-        GruvboxYellowSign = { bg = "none" },
-        GruvboxRedSign = { bg = "none" },
-        GruvboxBlueSign = { bg = "none" },
-        GruvboxAquaSign = { bg = "none" },
-      },
+      flavour = "mocha",
+      transparent_background = true,
     },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
+    end,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "catppuccin",
     },
+    init = function()
+      local function apply()
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = "#89B4FA" })
+        vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = "#89B4FA" })
+        vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
+        vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
+      end
+      local group = vim.api.nvim_create_augroup("LazyThemeOverrides", { clear = true })
+      vim.api.nvim_create_autocmd("ColorScheme", { callback = apply, group = group })
+      apply()
+    end,
   },
 }

@@ -19,8 +19,10 @@ directory `themes/<name>/` containing exactly 4 files. There is no registry:
 | `nvim.lua` | copied to `nvim/lua/plugins/colorscheme.lua` | Neovim colorscheme plugin spec + LazyVim integration |
 
 `./theme.sh apply <name>` also **generates** `opencode/themes/<name>.json`
-from the ghostty.conf palette and sets `opencode/tui.json` theme. Do NOT
-create those files manually — `apply` owns them.
+and `claude/themes/<name>.json` from the ghostty.conf palette, sets
+`opencode/tui.json` theme, and writes `"theme": "custom:<name>"` in
+`claude/settings.json`. Do NOT create those files manually — `apply` owns
+them.
 
 Existing themes (reference implementations): `gruvbox`, `dracula`,
 `catppuccin`, `nord`, `tokyonight`, `monokai`.
@@ -202,19 +204,23 @@ end,
 ### 4. Apply
 
 Run `./theme.sh apply <name>`. It copies all 4 files to their targets,
-generates `opencode/themes/<name>.json`, sets `opencode/tui.json`, and runs
-the nvim plugin sync. Then tell the user:
+generates `opencode/themes/<name>.json` and `claude/themes/<name>.json`,
+sets `opencode/tui.json` + `claude/settings.json`, and runs the nvim plugin
+sync. Then tell the user:
 
 - `source ~/.zshrc` (starship/zsh colors)
 - restart ghostty (Cmd+Q) — its palette does not hot-reload
 - restart opencode (the TUI theme)
+- claude reloads on its own (it watches `~/.claude/themes`); if
+  `~/.claude/themes` did not exist when the session started, restart once
 
 ## Rules
 
 - All 4 files are mandatory; `apply` fails without any of them.
 - Never edit `ghostty/theme.conf`, the repo-root `starship.toml`,
-  `nvim/lua/plugins/colorscheme.lua`, `opencode/tui.json`, or
-  `opencode/themes/*.json` directly — always go through `./theme.sh apply`.
+  `nvim/lua/plugins/colorscheme.lua`, `opencode/tui.json`,
+  `opencode/themes/*.json`, `claude/settings.json`, or
+  `claude/themes/*.json` directly — always go through `./theme.sh apply`.
 - Keep the new theme's starship.toml structure byte-identical to the others
   except palette name + values.
 - Do not add wallpapers or touch `ghostty/config` (transparency/opacity is

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk '/class Session /{f=1} f&&/^  [a-zA-Z].*\\\\\\(/{print NR\": \"$0} f&&/^}/{exit}' packages/sdk/js/src/gen/sdk.gen.ts)",
+      "Bash(awk '/export type Permission = \\\\{/{f=1} f{print} f&&/^\\\\}/{exit}' packages/sdk/js/src/gen/types.gen.ts)",
+      "Bash(awk '/export type Session = \\\\{/{f=1} f{print NR\": \"$0} f&&/^\\\\}/{exit}' packages/sdk/js/src/gen/types.gen.ts)",
+      "Bash(awk '/export type TuiApp = /{f=1} f{print} f&&/^\\\\}/{c++} c==1&&/^\\\\}/{exit}' packages/plugin/src/tui.ts)",
+      "Bash(awk '/export type TuiRouteCurrent = /{f=1} f{print} f&&/^\\\\}/{exit}' packages/plugin/src/tui.ts)",
+      "Bash(awk '/export type TuiEventBus = /{f=1} f{print} f&&/^\\\\}/{exit}' packages/plugin/src/tui.ts)"
+    ]
+  }
+}
