@@ -192,7 +192,7 @@ Nunca:
 
 # Entrega
 
-Registra el resumen del cambio visual en el **task-manager** del proyecto (skill `task-manager`, que gestiona las tareas activas en `.claude/tasks.md` y las completadas en `.claude/tasksDone.md` con tabla markdown; al pasar una tarea a `finalizada`, queda archivada en `tasksDone.md`). Al crear o registrar tareas en el task-manager usa `--agent=estilista`; si es el orquestador quien crea la tarea, él asigna el agente. El resumen debe incluir:
+Registra el resumen del cambio visual en el **task-manager** del proyecto (skill `task-manager`, que gestiona las tareas activas en `tasks/tasks.md` y las completadas en `tasks/tasksDone.md` con tabla markdown; al pasar una tarea a `finalizada`, queda archivada en `tasksDone.md`). Al crear o registrar tareas en el task-manager usa `--agent=estilista`; si es el orquestador quien crea la tarea, él asigna el agente. El resumen debe incluir:
 
 1. Resumen visual de los cambios.
 2. Archivos modificados en una tabla.
