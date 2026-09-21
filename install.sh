@@ -72,10 +72,32 @@ brew install \
   sd \
   fzf \
   zoxide \
+  tmux \
+  yazi \
+  atuin \
+  direnv \
+  mise \
+  btop \
+  fastfetch \
+  git-delta \
+  zsh-autosuggestions \
+  zsh-syntax-highlighting \
+  zsh-history-substring-search \
   ghostty \
   docker \
   jq \
   || warn "Alguna app falló; revisa el error de arriba"
+
+# -------------------------------------------------------------- Zsh plugin --
+FZF_TAB_DIR="$DOTFILES_DIR/zsh/plugins/fzf-tab"
+if [ ! -d "$FZF_TAB_DIR" ]; then
+  log "Instalando fzf-tab..."
+  mkdir -p "$DOTFILES_DIR/zsh/plugins"
+  git clone --depth 1 https://github.com/Aloxaf/fzf-tab.git "$FZF_TAB_DIR" \
+    || warn "No se pudo instalar fzf-tab"
+else
+  log "fzf-tab ya instalado"
+fi
 
 log "Instalando cask de la fuente Cascadia Code Nerd Font..."
 brew install --cask font-caskaydia-cove-nerd-font || warn "Fallo al instalar la fuente"
