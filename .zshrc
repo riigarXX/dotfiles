@@ -1,11 +1,89 @@
-eval "$(starship init zsh)"
-
-# opencode
-export PATH=/Users/alvaro.lopez/.opencode/bin:$PATH
-
 # EDITOR
 export EDITOR=nvim
 export VISUAL=nvim
+
+# PATH portable entre Homebrew en Apple Silicon e Intel, sin entradas repetidas.
+path=(
+  "$HOME/.local/bin"
+  "$HOME/bin"
+  /opt/homebrew/bin
+  /opt/homebrew/sbin
+  /usr/local/bin
+  /usr/local/sbin
+  "$HOME/.lmstudio/bin"
+  $path
+)
+path=(${path:#/Users/alvaro.lopez/.opencode/bin})
+typeset -U path PATH
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# Historial compartido, deduplicado y suficientemente grande para búsquedas.
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+setopt append_history inc_append_history share_history
+setopt hist_expire_dups_first hist_find_no_dups hist_ignore_all_dups
+setopt hist_ignore_space hist_reduce_blanks hist_save_no_dups hist_verify
+
+# Completion antes de los plugins que lo amplían.
+autoload -Uz compinit
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-${ZSH_VERSION}"
+mkdir -p "${ZSH_COMPDUMP:h}"
+compinit -d "$ZSH_COMPDUMP"
+
+source_if_exists() {
+  [[ -r "$1" ]] && source "$1"
+}
+
+# Plugins opcionales: la configuración sigue funcionando aunque falten en otra máquina.
+source_if_exists "$HOME/dotfiles/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
+for zsh_plugin in \
+  /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+  source_if_exists "$zsh_plugin" && break
+done
+if (( $+commands[fzf] )); then
+  if [[ -r /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
+    source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+    source_if_exists /opt/homebrew/opt/fzf/shell/completion.zsh
+  elif [[ -r /usr/local/opt/fzf/shell/key-bindings.zsh ]]; then
+    source /usr/local/opt/fzf/shell/key-bindings.zsh
+    source_if_exists /usr/local/opt/fzf/shell/completion.zsh
+  fi
+  (( $+commands[fd] )) && export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+fi
+
+zsh_history_substring_loaded=0
+for zsh_plugin in \
+  /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh \
+  /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh; do
+  if source_if_exists "$zsh_plugin"; then
+    zsh_history_substring_loaded=1
+    break
+  fi
+done
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+(( $+commands[atuin] )) && eval "$(atuin init zsh)"
+(( $+commands[direnv] )) && eval "$(direnv hook zsh)"
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
+
+if (( zsh_history_substring_loaded )); then
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+  bindkey '^[OA' history-substring-search-up
+  bindkey '^[OB' history-substring-search-down
+fi
+unset zsh_history_substring_loaded
+
+# Syntax highlighting debe cargarse al final, después de todos los widgets.
+for zsh_plugin in \
+  /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
+  source_if_exists "$zsh_plugin" && break
+done
+unset zsh_plugin
 
 # ALIASES BÁSICOS PARA DESARROLLO
 alias ls='lsd'
@@ -61,16 +139,24 @@ alias gr='git reset'
 alias grh='git reset HEAD'
 alias grhh='git reset HEAD --hard'
 alias gcp='git cherry-pick'
-alias gstp='git stash push'
 alias gstp='git stash pop'
+alias gstpush='git stash push'
 alias gstl='git stash list'
 alias gstd='git stash drop'
 alias theme='~/dotfiles/theme.sh'
 
-# NVM (Node Version Manager)
+# NVM (Node Version Manager), cargado solo al invocarlo para acelerar el inicio.
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+load_nvm() {
+  unfunction nvm node npm npx corepack 2>/dev/null
+  [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+  [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+}
+nvm() { load_nvm; nvm "$@"; }
+node() { load_nvm; node "$@"; }
+npm() { load_nvm; npm "$@"; }
+npx() { load_nvm; npx "$@"; }
+corepack() { load_nvm; corepack "$@"; }
 
 # PYENV (Python Version Manager) - Instalar con: curl https://pyenv.run | bash
 # export PYENV_ROOT="$HOME/.pyenv"
@@ -99,24 +185,6 @@ alias dlogsf='docker logs -f'
 
 # Mi fork de opencode (panel de background agents + alertas)
 alias opencode="$HOME/bin/opencode"
-
-# PATHS ADICIONALES PARA HERRAMIENTAS
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/bin:$PATH"
-export PATH="/usr/local/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
-
-# CONFIGURACIONES ADICIONALES
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-# HISTORY CONFIG
-HISTSIZE=10000
-SAVEHIST=10000
-HISTFILE=~/.zsh_history
-setopt hist_ignore_all_dups
-setopt hist_ignore_space
-setopt share_history
 
 # FUNCIONES ÚTILES PARA DESARROLLO
 # Crear directorio y entrar
@@ -179,7 +247,4 @@ myip() {
 # TEMA ACTIVO (generado por theme.sh)
 [ -f "$HOME/.config/zsh-colors.sh" ] && source "$HOME/.config/zsh-colors.sh"
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/rigarxx/.lmstudio/bin"
-# End of LM Studio CLI section
-
+(( $+commands[starship] )) && eval "$(starship init zsh)"

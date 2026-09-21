@@ -29,6 +29,9 @@ link "$DOTFILES_DIR/starship.toml"        "$HOME/.config/starship.toml"
 link "$DOTFILES_DIR/ghostty"              "$HOME/.config/ghostty"
 link "$DOTFILES_DIR/wallpapers"           "$HOME/.config/ghostty/wallpapers"
 link "$DOTFILES_DIR/nvim"                 "$HOME/.config/nvim"
+mkdir -p "$HOME/.config/tmux" "$HOME/.config/yazi"
+link "$DOTFILES_DIR/tmux/tmux.conf"       "$HOME/.config/tmux/tmux.conf"
+link "$DOTFILES_DIR/yazi/yazi.toml"       "$HOME/.config/yazi/yazi.toml"
 
 # ---------------------------------------------------------------- OpenCode --
 mkdir -p "$HOME/.config/opencode"

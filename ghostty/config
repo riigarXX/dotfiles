@@ -2,6 +2,13 @@ background-opacity = 0.80
 font-family        = CaskaydiaCove Nerd Font Mono
 font-size          = 14
 
+# Comfortable terminal-first defaults. Colors remain owned by theme.conf.
+window-padding-x = 12
+window-padding-y = 10
+macos-titlebar-style = transparent
+shell-integration = detect
+scrollback-limit = 10000000
+
 # Monokai Pro inspired
 
 background = #2D2A2E
@@ -29,7 +36,21 @@ palette = 15=#FFFFFF
 # ┌──────────────────────────────────────────────────────────────────────────────┐ 
 # │                            INPUT / KEYBINDINGS                               │ 
 # └──────────────────────────────────────────────────────────────────────────────┘ 
-## macOS Alt key fix macos-option-as-alt = left keybind = alt+left=unbind keybind = alt+right=unbind
+# Use the left Option key for terminal Meta shortcuts while keeping the right
+# Option key available for macOS characters.
+macos-option-as-alt = left
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+
+# Tabs, window management and clipboard
+keybind = cmd+t=new_tab
+keybind = cmd+shift+left_bracket=previous_tab
+keybind = cmd+shift+right_bracket=next_tab
+keybind = cmd+w=close_surface
+keybind = cmd+shift+w=close_window
+keybind = ctrl+cmd+f=toggle_fullscreen
+keybind = cmd+c=copy_to_clipboard
+keybind = cmd+v=paste_from_clipboard
 # Split Management
 keybind = alt+v=new_split:right
 keybind = alt+d=new_split:down
@@ -46,6 +67,8 @@ keybind = ctrl+shift+k=resize_split:down,10
 keybind = ctrl+shift+h=resize_split:left,10
 keybind = ctrl+shift+l=resize_split:right,10
 
+keybind = cmd+shift+enter=toggle_split_zoom
+keybind = cmd+shift+equal=equalize_splits
 keybind = cmd+k=clear_screen
 
 # Tema activo (lo escribe theme.sh). Va al final para que sus colores
