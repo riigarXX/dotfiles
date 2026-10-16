@@ -7,6 +7,9 @@ log()  { printf "\033[1;32m[install]\033[0m %s\n" "$*"; }
 warn() { printf "\033[1;33m[install]\033[0m %s\n" "$*"; }
 fail() { printf "\033[1;31m[install]\033[0m %s\n" "$*"; exit 1; }
 
+# shellcheck source=lib/nvim.sh
+. "$DOTFILES_DIR/lib/nvim.sh"
+
 # ------------------------------------------------------------ Symlinks -------
 link() {
   local src="$1" dst="$2"
@@ -80,6 +83,7 @@ brew install \
   btop \
   fastfetch \
   git-delta \
+  lazygit \
   zsh-autosuggestions \
   zsh-syntax-highlighting \
   zsh-history-substring-search \
@@ -160,7 +164,7 @@ fi
 
 # ------------------------------------------------- Neovim plugins (LazyVim) --
 log "Instalando plugins de Neovim (primera ejecución)..."
-nvim --headless "+Lazy! sync" +qa 2>/dev/null || warn "Ejecuta 'nvim' manualmente para terminar de instalar los plugins"
+nvim_sync || warn "Ejecuta 'nvim' manualmente para terminar de instalar los plugins"
 
 # ------------------------------------------------------ Tema por defecto ----
 # Los archivos del tema activo no se versionan (ver .gitignore); en un clon

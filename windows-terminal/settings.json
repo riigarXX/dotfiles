@@ -1,0 +1,108 @@
+// =============================================================================
+//  Windows Terminal: equivalente de ghostty/config en Windows.
+//
+//  Este archivo es la FUENTE DE VERDAD y solo se lee. `theme.ps1 apply` lo
+//  mezcla con el esquema de color del tema activo y escribe el resultado en el
+//  settings.json real de Windows Terminal, preservando las claves que no
+//  gestionamos (profiles.list, perfiles dinámicos, etc.).
+//
+//  Los colores NO van aquí: los aporta el tema (themes/<tema>/ghostty.conf).
+// =============================================================================
+{
+  "$help": "https://aka.ms/terminal-documentation",
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+
+  // PowerShell 7 (pwsh) como shell por defecto.
+  "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+
+  "theme": "dark",
+  "copyOnSelect": false,
+  "copyFormatting": "none",
+  "trimBlockSelection": true,
+  "focusFollowMouse": false,
+  "tabWidthMode": "equal",
+  "useAcrylicInTabRow": true,
+  "showTabsInTitlebar": true,
+  "alwaysShowTabs": true,
+  "initialCols": 120,
+  "initialRows": 32,
+
+  "profiles": {
+    // Se aplica a todos los perfiles, igual que la sección global de ghostty.
+    "defaults": {
+      "font": {
+        "face": "CaskaydiaCove Nerd Font Mono",
+        "size": 14
+      },
+
+      // ghostty: background-opacity = 0.80 (transparencia sin desenfoque).
+      "opacity": 80,
+      "useAcrylic": false,
+
+      // ghostty: window-padding-x = 12 / window-padding-y = 10
+      // (orden: izquierda, arriba, derecha, abajo)
+      "padding": "12, 10, 12, 10",
+
+      // ghostty: scrollback-limit. WT reserva memoria por línea, así que se
+      // usa un valor alto pero sensato en lugar de 10.000.000.
+      "historySize": 100000,
+
+      // ghostty: shell-integration = detect
+      "autoMarkPrompts": true,
+      "showMarksOnScrollbar": true,
+
+      "antialiasingMode": "grayscale",
+      "scrollbarState": "visible",
+      "snapOnInput": true,
+      "bellStyle": "none",
+      "cursorShape": "bar"
+    }
+  },
+
+  // ┌──────────────────────────────────────────────────────────────────────────┐
+  // │                          INPUT / KEYBINDINGS                             │
+  // └──────────────────────────────────────────────────────────────────────────┘
+  // Mismo esquema que ghostty, con Ctrl donde macOS usa Cmd. Las teclas de
+  // splits (alt+v/d y alt+hjkl) son idénticas a las de macOS.
+  "actions": [
+    // ── Pestañas ──
+    { "command": "newTab", "keys": "ctrl+shift+t" },
+    { "command": "prevTab", "keys": "ctrl+shift+tab" },
+    { "command": "nextTab", "keys": "ctrl+tab" },
+    { "command": "closePane", "keys": "ctrl+shift+w" },
+    { "command": "closeWindow", "keys": "ctrl+shift+q" },
+    { "command": "toggleFullscreen", "keys": "f11" },
+
+    // ── Portapapeles ──
+    { "command": { "action": "copy", "singleLine": false }, "keys": "ctrl+shift+c" },
+    { "command": "paste", "keys": "ctrl+shift+v" },
+    { "command": "paste", "keys": "ctrl+v" },
+
+    // ── Crear splits ── (ghostty: alt+v / alt+d)
+    { "command": { "action": "splitPane", "split": "right", "splitMode": "duplicate" }, "keys": "alt+v" },
+    { "command": { "action": "splitPane", "split": "down", "splitMode": "duplicate" }, "keys": "alt+d" },
+
+    // ── Navegar splits ── (ghostty: alt+k/j/h/l)
+    { "command": { "action": "moveFocus", "direction": "up" }, "keys": "alt+k" },
+    { "command": { "action": "moveFocus", "direction": "down" }, "keys": "alt+j" },
+    { "command": { "action": "moveFocus", "direction": "left" }, "keys": "alt+h" },
+    { "command": { "action": "moveFocus", "direction": "right" }, "keys": "alt+l" },
+
+    // ── Redimensionar splits ── (ghostty: ctrl+shift+j/k/h/l)
+    { "command": { "action": "resizePane", "direction": "up" }, "keys": "ctrl+shift+j" },
+    { "command": { "action": "resizePane", "direction": "down" }, "keys": "ctrl+shift+k" },
+    { "command": { "action": "resizePane", "direction": "left" }, "keys": "ctrl+shift+h" },
+    { "command": { "action": "resizePane", "direction": "right" }, "keys": "ctrl+shift+l" },
+
+    // ── Zoom del split ── (ghostty: cmd+shift+enter)
+    { "command": "togglePaneZoom", "keys": "alt+shift+enter" },
+
+    // Limpiar pantalla: en PowerShell lo hace Ctrl+L (PSReadLine ClearScreen),
+    // que es el equivalente nativo de cmd+k en ghostty.
+
+    // alt+left / alt+right se dejan libres para que lleguen al shell y muevan
+    // por palabras (ghostty hace el mismo unbind).
+    { "command": "unbound", "keys": "alt+left" },
+    { "command": "unbound", "keys": "alt+right" }
+  ]
+}

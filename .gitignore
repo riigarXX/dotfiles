@@ -1,17 +1,23 @@
 # ------------------------------------------------------------------ macOS ----
 .DS_Store
 
+# ---------------------------------------------------------------- Windows ----
+Thumbs.db
+desktop.ini
+
 # ------------------------------------------------- tema activo (derivados) --
-# Copias que genera ./theme.sh apply <tema> desde themes/<tema>/.
+# Copias que genera ./theme.sh apply <tema> (macOS) o .\theme.ps1 apply <tema>
+# (Windows) desde themes/<tema>/.
 # La fuente de verdad son los archivos dentro de themes/<tema>/; los derivados
 # no se versionan para que el repo no cambie al cambiar de tema o de máquina.
 ghostty/theme.conf
+windows-terminal/theme.json
+powershell/colors.ps1
 starship.toml
 nvim/lua/plugins/colorscheme.lua
 opencode/tui.json
 opencode/themes/
-claude/settings.json
-claude/themes/
+claude/
 
 # nvim/lazy-lock.json se reescribe en cada apply (nvim sync): no versionar.
 nvim/lazy-lock.json

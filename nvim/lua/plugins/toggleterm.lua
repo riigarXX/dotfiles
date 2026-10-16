@@ -8,6 +8,8 @@ return {
     opts = {
       open_mapping = [[<C-/>]],
       direction = "float",
+      -- En Windows el shell por defecto es cmd; usa pwsh si está disponible.
+      shell = vim.fn.has("win32") == 1 and vim.fn.executable("pwsh") == 1 and "pwsh -NoLogo" or vim.o.shell,
       float_opts = {
         border = "curved",
         width = math.floor(vim.o.columns * 0.8),

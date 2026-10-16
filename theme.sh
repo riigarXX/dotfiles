@@ -19,6 +19,9 @@ BOLD=$'\033[1m'
 warn() { printf "\033[1;33m[theme]\033[0m %s\n" "$*"; }
 err()  { printf "\033[1;31m[theme]\033[0m %s\n" "$*"; exit 1; }
 
+# shellcheck source=lib/nvim.sh
+. "$DOTFILES_DIR/lib/nvim.sh"
+
 available_themes() {
   ls -d "$THEMES_DIR"/*/ 2>/dev/null | xargs -n1 basename
 }
@@ -520,7 +523,7 @@ apply() {
       5)
         if ! cmp -s "$THEMES_DIR/$t/nvim.lua" "$NVIM_ACTIVE"; then
           cp "$THEMES_DIR/$t/nvim.lua" "$NVIM_ACTIVE"
-          nvim --headless "+Lazy! sync" +qa >/dev/null 2>&1 || warn "Ejecuta 'nvim' manualmente para terminar de instalar"
+          nvim_sync || warn "Ejecuta 'nvim' manualmente para terminar de instalar"
         fi
         ;;
     esac
